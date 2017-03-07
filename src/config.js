@@ -8,7 +8,16 @@ export const prefix = '/api'
 export const port = 3030
 // app key 用于session
 export const key = 'X-Server'
+
+// 数据库名称
+const dbName = 'X-Server-Koa'
 // Mongo 相关配置
 export const dbConfig = {
-    url: 'mongodb://localhost/X-Server-Koa'
+    name: dbName,
+    url: 'mongodb://localhost/' + dbName,
+    admin: {
+        name: 'admin',
+        password: 'admin',
+        email: 'zmn2007.hi@163.com'
+    }
 }

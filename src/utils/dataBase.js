@@ -5,6 +5,7 @@
  */
 
 import mongoose from 'mongoose'
+import Users from '../models/Users'
 
 // 连接数据库
 export function collectDB(url) {
@@ -16,5 +17,28 @@ export function collectDB(url) {
             .once('open', () => resolve(mongoose.connections[0]))
 
         mongoose.connect(url)
+    })
+}
+
+// 创建管理员
+export function createAdmin(userInfo) {
+    return new Promise((resolve, reject) => {
+        (async () => {
+            try {
+                // 先查找一下是否已经创建过了
+                const user = await Users.findOne({ name: userInfo.name })
+                if (!user) {
+                    // 如果没创建则创建
+                    await Users.create({
+                        name: userInfo.name,
+                        password: userInfo.password,
+                        email: userInfo.email
+                    })
+                }
+                resolve()
+            } catch (error) {
+                reject(error)
+            }
+        })()
     })
 }

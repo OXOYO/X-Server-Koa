@@ -12,9 +12,9 @@ import routes from './routes'
 
 export default function api () {
     const router = new Router({ prefix })
-    console.log('x-log_routes ', routes)
+    // console.log('x-log_routes ', routes)
     Object.keys(routes).forEach(name => routes[name](router))
-    console.log('x-log_router', router)
+    // console.log('x-log_router', router)
     return compose([
         router.routes(),
         router.allowedMethods({
