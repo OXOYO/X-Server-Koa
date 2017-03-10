@@ -8,9 +8,10 @@ import Users from '../models/Users';
 
 export default (router) => {
     router
+        // 访问地址：http://localhost:3030/api/oxo
         .get('/oxo', async ctx => ctx.body = 'xxxxxxxxxxxxxxxxxx')
-        .get('/user', function *(next) {
-            this.body = '试试行不行'
+        .get('/user', function (ctx) {
+            ctx.body = '试试行不行'
         })
         .get('/oneUser', function (ctx) {
             ctx.body = '不知道还是不是404'
