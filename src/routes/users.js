@@ -16,6 +16,45 @@ export default (router) => {
         .get('/oneUser', function (ctx) {
             ctx.body = '不知道还是不是404'
         })
+        // 用户登录
+        .post('/singIn', async (ctx, next) => {
+            await next()
+            // 执行登录
+            let reqBody = ctx.request.body
+            let res =  await Users.singIn({
+                userName: reqBody.userName,
+                password: reqBody.password
+            })
+            console.log('xxxxxxxxxxxxxxxxxx')
+            console.log(reqBody)
+            if (res) {
+                ctx.body = res
+            } else {
+                /*ctx.body = {
+                 title: 'test',
+                 name: 'oxo',
+                 date: '2017-01-12 23:59:53'
+                 }*/
+                // ctx.body = '啥也没找到！'
+            }
+        })
+        // 注册用户
+        .get('/singUp', async (ctx, next) => {
+
+            // 创建管理员
+            let admin = new Users({
+                name: 'admin',
+                password: '123456',
+                email: 'zmn2007.hi@163.com'
+            });
+            // 保存用户
+            admin.save(function (err, admin) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.info(admin);
+            });
+        })
         // 获取所有用户信息
         .get('/users', async (ctx, next) => {
             await next()

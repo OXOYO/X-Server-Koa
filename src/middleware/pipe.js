@@ -44,10 +44,8 @@ function spellRespone(code, desc, body) {
 
     // callback
     return {
-        head: {
-            code,
-            desc
-        },
-        body
+        code,
+        desc,
+        data: body
     }
 }

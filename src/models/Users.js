@@ -10,7 +10,7 @@ import validate from 'mongoose-validator'
 
 // 定义用户属性
 const userSchema = new mongoose.Schema({
-    name: {
+    userName: {
         type: String,
         trim: true,
         required: true,
@@ -57,6 +57,28 @@ userSchema.statics.findById = async function (id) {
         return {
             done: true,
             data: res
+        }
+    }
+}
+
+// 用户登录
+userSchema.statics.singIn = async function (userInfo) {
+    let exists = null
+    // 判断用户是拿 用户名||邮箱 登录的
+    if (userInfo.userName) {
+        exists = await this.findOne({userName: userInfo.userName, password: userInfo.password})
+    }
+
+    if (exists) {
+        return {
+            status: 1,
+            msg: '登录成功',
+            res: exists
+        }
+    } else {
+        return {
+            status: 0,
+            msg: '该用户没有注册，请先注册'
         }
     }
 }
