@@ -43,7 +43,7 @@ export default (router) => {
 
             // 创建管理员
             let admin = new Users({
-                name: 'admin',
+                userName: 'admin',
                 password: '123456',
                 email: 'zmn2007.hi@163.com'
             });

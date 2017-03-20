@@ -26,11 +26,11 @@ export function createAdmin(userInfo) {
         (async () => {
             try {
                 // 先查找一下是否已经创建过了
-                const user = await Users.findOne({ name: userInfo.name })
+                const user = await Users.findOne({ userName: userInfo.userName })
                 if (!user) {
                     // 如果没创建则创建
                     await Users.create({
-                        name: userInfo.name,
+                        userName: userInfo.userName,
                         password: userInfo.password,
                         email: userInfo.email
                     })

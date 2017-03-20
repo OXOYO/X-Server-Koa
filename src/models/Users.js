@@ -63,22 +63,38 @@ userSchema.statics.findById = async function (id) {
 
 // 用户登录
 userSchema.statics.singIn = async function (userInfo) {
-    let exists = null
-    // 判断用户是拿 用户名||邮箱 登录的
+    // 1.判断是否存在用户
+    let hasUser = null
     if (userInfo.userName) {
-        exists = await this.findOne({userName: userInfo.userName, password: userInfo.password})
+        hasUser = await this.findOne({userName: userInfo.userName})
     }
 
-    if (exists) {
-        return {
-            status: 1,
-            msg: '登录成功',
-            res: exists
+    // 2.判断用户是拿 用户名||邮箱 登录的
+    let userDetail = null
+    if (hasUser) {
+        userDetail = await this.findOne({userName: userInfo.userName, password: userInfo.password})
+
+        if (userDetail) {
+            return {
+                status: 1,
+                msg: '登录成功',
+                res: {
+                    userName: userDetail.userName,
+                    email: userDetail.email
+                }
+            }
+        } else {
+            return {
+                status: 0,
+                msg: '用户名或密码不正确',
+                res: null
+            }
         }
     } else {
         return {
             status: 0,
-            msg: '该用户没有注册，请先注册'
+            msg: '该用户没有注册，请先注册',
+            res: null
         }
     }
 }

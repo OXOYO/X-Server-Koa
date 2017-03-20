@@ -16,7 +16,7 @@ export const dbConfig = {
     name: dbName,
     url: 'mongodb://localhost/' + dbName,
     admin: {
-        name: 'admin',
+        userName: 'admin',
         password: 'admin',
         email: 'zmn2007.hi@163.com'
     }
