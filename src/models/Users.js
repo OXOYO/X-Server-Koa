@@ -61,44 +61,6 @@ userSchema.statics.findById = async function (id) {
     }
 }
 
-// 用户登录
-userSchema.statics.singIn = async function (userInfo) {
-    // 1.判断是否存在用户
-    let hasUser = null
-    if (userInfo.userName) {
-        hasUser = await this.findOne({userName: userInfo.userName})
-    }
-
-    // 2.判断用户是拿 用户名||邮箱 登录的
-    let userDetail = null
-    if (hasUser) {
-        userDetail = await this.findOne({userName: userInfo.userName, password: userInfo.password})
-
-        if (userDetail) {
-            return {
-                status: 1,
-                msg: '登录成功',
-                res: {
-                    userName: userDetail.userName,
-                    email: userDetail.email
-                }
-            }
-        } else {
-            return {
-                status: 0,
-                msg: '用户名或密码不正确',
-                res: null
-            }
-        }
-    } else {
-        return {
-            status: 0,
-            msg: '该用户没有注册，请先注册',
-            res: null
-        }
-    }
-}
-
 // 创建用户
 userSchema.statics.create = async function (userInfo) {
     let user = new this(userInfo)
@@ -143,6 +105,85 @@ userSchema.statics.removeById = async function (id) {
         return {
             done: true,
             data: res
+        }
+    }
+}
+
+
+// 用户登录
+userSchema.statics.signIn = async function (userInfo) {
+    // 1.判断是否存在用户
+    let hasUser = null
+    if (userInfo.userName) {
+        hasUser = await this.findOne({userName: userInfo.userName})
+    }
+
+    // 2.判断用户是拿 用户名||邮箱 登录的
+    let userDetail = null
+    if (hasUser) {
+        userDetail = await this.findOne({userName: userInfo.userName, password: userInfo.password})
+
+        if (userDetail) {
+            return {
+                status: 0,
+                msg: '登录成功',
+                res: {
+                    userName: userDetail.userName,
+                    email: userDetail.email
+                }
+            }
+        } else {
+            return {
+                status: 1,
+                msg: '用户名或密码不正确',
+                res: null
+            }
+        }
+    } else {
+        return {
+            status: 2,
+            msg: '该用户没有注册，请先注册',
+            res: null
+        }
+    }
+}
+
+// 用户注册
+userSchema.statics.signUp = async function (userInfo) {
+    // 1.判断是否存在用户
+    let hasUser = null
+    if (userInfo.userName) {
+        hasUser = await this.findOne({userName: userInfo.userName})
+    }
+    console.log(userInfo.userName)
+    // 2.判断用户是拿 用户名||邮箱 登录的
+    let userDetail = null
+    // 不存在则创建新用户
+    if (!hasUser) {
+        let user = new this(userInfo)
+        //  创建成功返回true
+        userDetail = await user.save()
+        if (userDetail) {
+            return {
+                status: 0,
+                msg: '新用户注册成功，请登录',
+                res: {
+                    userName: userDetail.userName,
+                    email: userDetail.email
+                }
+            }
+        } else {
+            return {
+                status: 1,
+                msg: '新用户注册失败',
+                res: null
+            }
+        }
+    } else {
+        return {
+            status: 2,
+            msg: '该用户已注册，请登录',
+            res: null
         }
     }
 }
