@@ -33,85 +33,8 @@ const userSchema = new mongoose.Schema({
 })
 
 // 创建静态方法
-// 查找所有用户
-userSchema.statics.findAll = async function () {
-    let res = await this.find()
-
-    if (res) {
-        return {
-            done: true,
-            data: res
-        }
-    } else {
-        return {
-            done: false
-        }
-    }
-}
-
-// 按ID查询
-userSchema.statics.findById = async function (id) {
-    let res = await this.findById(id)
-
-    if (res) {
-        return {
-            done: true,
-            data: res
-        }
-    }
-}
-
-// 创建用户
-userSchema.statics.create = async function (userInfo) {
-    let user = new this(userInfo)
-
-    // 如果已存在则返回false
-    let exists = await this.findOne({email: user.email})
-    if (exists) {
-        return {
-            done: false,
-        }
-    }
-
-    //  创建成功返回true
-    let back = await user.save()
-    if (back) {
-        return {
-            done: true,
-            data: back
-        }
-    }
-}
-
-// 更新用户
-userSchema.statics.updateById = async function (id, userInfo) {
-    let user = new this(userInfo)
-
-    let res = await this.update(id, userInfo)
-
-    if (res) {
-        return {
-            done: true,
-            data: res
-        }
-    }
-}
-
-// 删除用户
-userSchema.statics.removeById = async function (id) {
-    let res = await this.delete(id)
-
-    if (res) {
-        return {
-            done: true,
-            data: res
-        }
-    }
-}
-
-
 // 用户登录
-userSchema.statics.signIn = async function (userInfo) {
+userSchema.statics.doSignIn = async function (userInfo) {
     // 1.判断是否存在用户
     let hasUser = null
     if (userInfo.userName) {
@@ -149,7 +72,7 @@ userSchema.statics.signIn = async function (userInfo) {
 }
 
 // 用户注册
-userSchema.statics.signUp = async function (userInfo) {
+userSchema.statics.doSignUp = async function (userInfo) {
     // 1.判断是否存在用户
     let hasUser = null
     if (userInfo.userName) {
@@ -187,6 +110,85 @@ userSchema.statics.signUp = async function (userInfo) {
         }
     }
 }
+
+// 查找所有用户
+userSchema.statics.getUsers = async function () {
+    let res = await this.find()
+
+    if (res) {
+        return {
+            status: 0,
+            msg: '查询用户列表成功',
+            res: res
+        }
+    } else {
+        return {
+            status: 1,
+            msg: '查询用户列表失败',
+            res: null
+        }
+    }
+}
+
+// 按ID查询
+userSchema.statics.getUserById = async function (id) {
+    // let res = await this.findById(id)
+    let res = await this.find({'_id': id})
+    if (res) {
+        return {
+            status: 0,
+            msg: '查询用户详情成功',
+            res: res
+        }
+    } else {
+        return {
+            status: 1,
+            msg: '查询用户详情失败',
+            res: null
+        }
+    }
+}
+
+// 更新用户
+userSchema.statics.updateUserById = async function (id, userInfo) {
+    let user = new this(userInfo)
+
+    let res = await this.update(id, userInfo)
+
+    if (res) {
+        return {
+            status: 0,
+            msg: '更新用户成功',
+            res: res
+        }
+    } else {
+        return {
+            status: 1,
+            msg: '更新用户失败',
+            res: null
+        }
+    }
+}
+
+// 删除用户
+userSchema.statics.removeById = async function (id) {
+    let res = await this.delete(id)
+
+    if (res) {
+        return {
+            status: 0,
+            msg: '删除用户成功',
+            res: res
+        }
+    } else {
+        return {
+            status: 1,
+            msg: '删除用户失败',
+            res: null
+        }
+    }
+}
+
 
 // 发布用户model
 export default mongoose.model('Users', userSchema)
