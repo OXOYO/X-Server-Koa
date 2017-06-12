@@ -35,22 +35,23 @@ const userSchema = new mongoose.Schema({
 // 创建静态方法
 // 用户登录
 userSchema.statics.doSignIn = async function (userInfo) {
+    let _t = this
     // 1.判断是否存在用户
     let hasUser = null
     if (userInfo.userName) {
-        hasUser = await this.findOne({userName: userInfo.userName})
+        hasUser = await _t.findOne({userName: userInfo.userName})
     }
-
     // 2.判断用户是拿 用户名||邮箱 登录的
     let userDetail = null
     if (hasUser) {
-        userDetail = await this.findOne({userName: userInfo.userName, password: userInfo.password})
+        userDetail = await _t.findOne({userName: userInfo.userName, password: userInfo.password})
 
         if (userDetail) {
             return {
                 status: 0,
                 msg: '登录成功',
                 res: {
+                    id: userDetail._id,
                     userName: userDetail.userName,
                     email: userDetail.email
                 }
@@ -73,17 +74,18 @@ userSchema.statics.doSignIn = async function (userInfo) {
 
 // 用户注册
 userSchema.statics.doSignUp = async function (userInfo) {
+    let _t = this
     // 1.判断是否存在用户
     let hasUser = null
     if (userInfo.userName) {
-        hasUser = await this.findOne({userName: userInfo.userName})
+        hasUser = await _t.findOne({userName: userInfo.userName})
     }
-    console.log(userInfo.userName)
+
     // 2.判断用户是拿 用户名||邮箱 登录的
     let userDetail = null
     // 不存在则创建新用户
     if (!hasUser) {
-        let user = new this(userInfo)
+        let user = new _t(userInfo)
         //  创建成功返回true
         userDetail = await user.save()
         if (userDetail) {
@@ -91,6 +93,7 @@ userSchema.statics.doSignUp = async function (userInfo) {
                 status: 0,
                 msg: '新用户注册成功，请登录',
                 res: {
+                    id: userDetail._id,
                     userName: userDetail.userName,
                     email: userDetail.email
                 }
@@ -113,13 +116,17 @@ userSchema.statics.doSignUp = async function (userInfo) {
 
 // 查找所有用户
 userSchema.statics.getUsers = async function () {
-    let res = await this.find()
+    let _t = this
+    let res = await _t.find()
 
     if (res) {
         return {
             status: 0,
             msg: '查询用户列表成功',
-            res: res
+            res: {
+                count: res.length,
+                list: res
+            }
         }
     } else {
         return {
@@ -132,13 +139,17 @@ userSchema.statics.getUsers = async function () {
 
 // 按ID查询
 userSchema.statics.getUserById = async function (id) {
-    // let res = await this.findById(id)
-    let res = await this.find({'_id': id})
+    let _t = this
+    let res = await _t.findById(id)
     if (res) {
         return {
             status: 0,
             msg: '查询用户详情成功',
-            res: res
+            res: {
+                id: res._id,
+                userName: res.userName,
+                email: res.email
+            }
         }
     } else {
         return {
@@ -151,9 +162,9 @@ userSchema.statics.getUserById = async function (id) {
 
 // 更新用户
 userSchema.statics.updateUserById = async function (id, userInfo) {
-    let user = new this(userInfo)
+    let _t = this
 
-    let res = await this.update(id, userInfo)
+    let res = await _t.update(id, userInfo)
 
     if (res) {
         return {
@@ -171,8 +182,9 @@ userSchema.statics.updateUserById = async function (id, userInfo) {
 }
 
 // 删除用户
-userSchema.statics.removeById = async function (id) {
-    let res = await this.delete(id)
+userSchema.statics.removeUserById = async function (id) {
+    let _t = this
+    let res = await _t.findByIdAndRemove(id)
 
     if (res) {
         return {
