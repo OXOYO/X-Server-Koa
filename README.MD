@@ -17,6 +17,13 @@ http://localhost:3030
         \_getUserById       // get 获取单个用户详情
         \_updateUserById    // post 更新单个用户
         \_removeUserById    // post 删除单个用户
+
+        \_doAddArticle      // post 添加文章
+        \_getArticles       // get 获取文章列表
+        \_getArticleById    // get 获取文章详情
+        \_updateArticleById // post 更新文章
+        \_removeArticleById // post 删除文章
+        \_removeArticles    // post 批量删除文章
 ```
 
 ## TODO

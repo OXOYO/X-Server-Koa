@@ -1,5 +1,7 @@
 /**
  * Created by yangfan on 2017/6/12.
+ *
+ * Users 控制器
  */
 
 import Users from '../models/Users'
