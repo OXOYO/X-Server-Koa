@@ -30,6 +30,17 @@ export default {
 
         ctx.body = res || {}
     },
+    doSignOut: async (ctx, next) => {
+        await next()
+        // 执行登录
+        let reqBody = ctx.request.body
+        let res = await Users.doSignOut({
+            userName: reqBody.userName,
+            password: reqBody.password
+        })
+
+        ctx.body = res || {}
+    },
     getUsers: async (ctx, next) => {
         await next()
         // 查找所有用户

@@ -114,6 +114,15 @@ userSchema.statics.doSignUp = async function (userInfo) {
     }
 }
 
+// TODO 用户退出
+userSchema.statics.doSignOut = async function (userInfo) {
+    return {
+        status: 0,
+        msg: '用户退出成功！',
+        res: null
+    }
+}
+
 // 查找所有用户
 userSchema.statics.getUsers = async function () {
     let _t = this

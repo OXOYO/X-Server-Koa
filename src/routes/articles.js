@@ -4,21 +4,23 @@
  * Articles 路由
  */
 
-
 import ArticlesCtrl from '../controllers/ArticlesCtrl.js'
+
+// api 命名空间
+const namespace = '/articles'
 
 export default (router) => {
     router
         // 添加文章
-        .post('/doAddArticle', ArticlesCtrl.doAddArticle)
+        .post(namespace + '/add', ArticlesCtrl.doAddArticle)
         // 获取所有文章
-        .get('/getArticles', ArticlesCtrl.getArticles)
+        .get(namespace + '/list', ArticlesCtrl.getArticles)
         // 获取文章详情
-        .get('/getArticleById/:id', ArticlesCtrl.getArticleById)
+        .get(namespace + '/detail/:id', ArticlesCtrl.getArticleById)
         // 更新某一篇文章
-        .post('/updateArticleById/:id', ArticlesCtrl.updateArticleById)
+        .post(namespace + '/update/:id', ArticlesCtrl.updateArticleById)
         // 删除某一篇文章
-        .post('/removeArticleById/:id', ArticlesCtrl.removeArticleById)
+        .post(namespace + '/remove/:id', ArticlesCtrl.removeArticleById)
         // 批量删除文章
-        .post('/removeArticles', ArticlesCtrl.removeArticles)
+        .post(namespace + '/remove/batch', ArticlesCtrl.removeArticles)
 }
